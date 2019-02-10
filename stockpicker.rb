@@ -18,3 +18,21 @@ end
 x = stock_picker([17,3,6,9,15,8,6,1,10])
 p x
 
+
+# Improved solution
+
+def stock_picker arr
+  store_items = {}
+  arr.each do |buy| 
+    arr.each do |sell|
+      unless arr.index(sell) > arr.index(buy)
+        store_items[[arr.index(buy), arr.index(sell)]] = buy - sell
+      else
+        next
+      end
+    end
+  end
+    p store_items.max{|(k1, v1), (k2, v2)| v1 <=> v2}
+end
+
+stock_picker([17,3,6,9,15,8,6,1,10])

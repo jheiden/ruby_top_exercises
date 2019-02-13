@@ -22,6 +22,7 @@ p x
 # Improved solution
 
 def stock_picker arr
+  
   store_items = {}
   arr.each do |buy| 
     arr.each do |sell|

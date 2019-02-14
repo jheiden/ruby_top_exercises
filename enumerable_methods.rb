@@ -115,10 +115,14 @@ module Enumerable
         case args.length
           when 1
             current_value = args[0]
-            self.unshift(current_value) # sets CV to first item within the array
+            self.unshift(current_value) # self now equals array the method was called on with CV as [0] within that array.
           else
-            return "Too many arguments, this method takes one"
+            return "Too many arguments, this method takes just one"
           end
+
+          # for item in self do ..
+          # x += yield(..item?)
+        
         
 
         self

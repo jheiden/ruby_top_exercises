@@ -1,7 +1,5 @@
 module Enumerable
 
-  # accepts a block and does something to each item according to the instructions in the block
-
   def my_each 
     if block_given?
       for item in self do
@@ -10,21 +8,7 @@ module Enumerable
     else raise LocalJumpError
     end
       self
-  end
-
-
-  # def my_each_with_index
-  #   if block_given?
-  #   i = 0
-  #   while i < self.length - 1 do
-  #     yield self[i], i
-  #     i += 1
-  #   end
-  #   else return "missing block"
-  # end
-  #   self
-  # end
-
+  end 
 
   def my_each_with_index
     if block_given?
@@ -36,6 +20,20 @@ module Enumerable
     else return "missing block"
   end
     self
+  end
+
+  def my_each_with_index_using_each
+    if block_given?
+      i = 0
+      while i < self.length - 1 do
+        self.my_each do |item| 
+          i += 1
+          yield(item, i)
+        end
+      end
+    else return "missing block"
+      
+    end
   end
   
   def my_select
@@ -49,10 +47,6 @@ module Enumerable
     end
       modified_array
   end
-
-# test if length of new array with true items == length of self
-# or use my_select ? 
-
 
   def my_all?
     if block_given?
@@ -77,53 +71,105 @@ module Enumerable
     return false
   end
 
+  def my_none?
+    if block_given?
+      self.my_each do | item |
+        unless yield(item)
+          return true
+        end
+      end
+    end
+      return false
+  end
 
 
+    def my_count
+     unless block_given?
+        return self.length
+     else
+        counter = 0
+        self.my_each do |item|
+          yield(item) ? counter += 1 : item
+        end
+     end
+        return counter 
+    end
+    
+    def my_map
+      unless block_given?
+        return "missing block"
+      else
+        modified_array = []
+        for item in self do
+          modified_array << yield(item)
+        end
+        end
+        return modified_array
+      end 
+        
+    # inject => alias of reduce. Need to yield(acc, currval)
+    # if currval > accumulator, then accumulator = currval
+
+    def my_inject(*args)
+      current_value = 0
+        case args.length
+          when 1
+            current_value = args[0]
+            self.unshift(current_value) # sets CV to first item within the array
+          else
+            return "Too many arguments, this method takes one"
+          end
+        
+
+        self
+    end
+
+
+
+# end of module
 end
 
-my_new_any_array = [1, "8", "2"]
-n = my_new_any_array.my_any {|item| item.is_a?(Integer)}
-p n
+# my_reduced_arr = [4,9,16]
+# reduced = my_reduced_arr.reduce{|acc, curr_val| acc + curr_val }
+# p reduced
 
-# my_all_array = [1, 8, 2]
-# n = my_all_array.my_all? {|item| item.is_a?(Integer)}
-# p n
+my_inject_array = [4,9,16]
+injected = my_inject_array.my_inject(1){|acc, cv| acc + cv}
+p injected
 
+my_map_array = [4, 8, 12]
+mapped = my_map_array.my_map{|item| item + 4}
 
-# my_all_array = [1, 8, 2]
-# n = my_all_array.my_all? {|item| item < 10}
-# p n
+my_count_array = [2, 4, 9, 12, 20]
+cnt = my_count_array.my_count{|item| item > 5}
 
+my_none_array = [1, 2, 3]
+none = my_none_array.my_none?{|item| item.is_a?(String)}
 
-# all_array = [1, 9, 4]
-# k = all_array.all? {|item| item < 10}
-# puts k
+my_any_array = [1, "8", "2"]
+n = my_any_array.my_any {|item| item.is_a?(Integer)}
 
+my_all_array = [1, 8, 2]
+n = my_all_array.my_all? {|item| item.is_a?(Integer)}
 
-# test_arr = [2, 4, "aa", false]
-# j = test_arr.my_select {|item| item.is_a?(Integer)}
-# p j 
+my_select_arr = [2, 4, "aa", false]
+j = my_select_arr.my_select {|item| item.is_a?(Integer)}
 
-# test_arr = [2, 4, "aa", false]
-# j = test_arr.select {|item| item.is_a?(Integer)}
-# puts j
-
-
-
-
-
-
-# my_second_arr = [20, 30, 40]
-# my_second_arr.my_each_with_index do |item, ind| 
+# my_each_with_index_using_each_arr = [20, 30, 40]
+# my_each_with_index_using_each_arr.my_each_with_index_using_each do |item, ind| 
 #   p "Item = #{item} , Index = #{ind}"
-
 # end
 
-# my_new_arr = []
-# my_arr = [1, 2, 5]
-# x  = my_arr.my_each do |item|  # x => original array as that is what .each returns.
-#    k = item + 5 # on each iteration store modif. value in <k>
-#    my_new_arr << k # on each iteration append <k> to new array.
+# my_each_with_index_arr = [20, 30, 40]
+# my_each_with_index_arr.my_each_with_index do |item, ind| 
+#   p "Item = #{item} , Index = #{ind}"
 # end
+
+my_new_each_arr = []
+my_each_arr = [1, 2, 5]
+x  = my_each_arr.my_each do |item|  # x => original array as that is what .each returns.
+   k = item + 5 # on each iteration store modif. value in <k>
+   my_new_each_arr << k # on each iteration append <k> to new array.
+end
 
 

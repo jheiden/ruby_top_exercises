@@ -140,18 +140,3 @@ end
 
 my_inject_array = [4,4,2]
 injected = my_inject_array.my_inject{|acc, cv| acc * cv}
-
-
-
-x = [4, 2, 1, 6, 2]
-
-a = x[0] + x[1]
-b = a + x[2]
-a = b + x[3]
-b = a + x[4]
-p b
-
-a = x[0] + x[1] # accumulator = yield(self[i] + self[i + 1])
-a = a + x[3]  # accumulator = yield(accumulator, self[i + 1])
-a = a + x[4]
-p a

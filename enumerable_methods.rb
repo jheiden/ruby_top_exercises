@@ -111,27 +111,31 @@ module Enumerable
     # if currval > accumulator, then accumulator = currval
 
     def my_inject(*args)
-      case args.length
-        when 0
-          accumulator = 0
-        when 1
-          accumulator = args[0]
-          self.unshift(accumulator) # self now equals array the method was called on with CV as [0] within that array.
-        else
-          return "Too many arguments, this method takes just one"
-        end
+      unless block_given?
+        return "missing block"
+      else
+        case args.length
+          when 0
+            accumulator = 0
+          when 1
+            accumulator = args[0]
+            self.unshift(accumulator) # self now equals array the method was called on with CV as [0] within that array.
+          else
+            return "Too many arguments, this method takes just one"
+          end
         
-        i = 0
-        while i < self.length - 1 do 
-          case i
-            when 0
-              accumulator = yield(self[i], self[i + 1])
-            else
-              accumulator = yield(accumulator, self[i + 1])
-            end
-          i += 1
-        end 
-        return accumulator
+          i = 0
+          while i < self.length - 1 do 
+            case i
+              when 0
+                accumulator = yield(self[i], self[i + 1])
+              else
+                accumulator = yield(accumulator, self[i + 1])
+              end
+            i += 1
+          end 
+        end
+          return accumulator
   end
 
   

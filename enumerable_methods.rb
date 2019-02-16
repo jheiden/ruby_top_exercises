@@ -138,7 +138,18 @@ module Enumerable
           return accumulator
   end
 
-  
+  def my_map_takes_proc (&prc)
+    if block_given?
+    modified_array = []
+      for item in self do
+       modified_array << prc.call(item)
+      end
+    else
+      self.to_enum
+    end
+      return modified_array
+  end
+
 # end of module
 end
 
@@ -147,9 +158,6 @@ end
 
 
 
-# my_reduced_arr = [4,9,16]
-# reduced = my_reduced_arr.reduce{|acc, curr_val| acc * curr_val}
-# p reduced
 
 my_inject_array = [4,25,16]
 injected = my_inject_array.my_inject(0){|acc, cv| acc + cv}
@@ -165,7 +173,7 @@ my_none_array = [1, 2, 3]
 none = my_none_array.my_none?{|item| item.is_a?(String)}
 
 my_any_array = [1, "8", "2"]
-n = my_any_array.my_any {|item| item.is_a?(Integer)}
+a = my_any_array.my_any {|item| item.is_a?(Integer)}
 
 my_all_array = [1, 8, 2]
 n = my_all_array.my_all? {|item| item.is_a?(Integer)}

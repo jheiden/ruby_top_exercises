@@ -10,91 +10,6 @@ module Enumerable
       self
   end 
 
-  def my_each_with_index
-    if block_given?
-    i = 0
-    while i < self.length - 1 do
-      yield self[i], i
-      i += 1
-    end
-    else return "missing block"
-  end
-    self
-  end
-
-  def my_each_with_index_using_each
-    if block_given?
-      i = 0
-      while i < self.length - 1 do
-        self.my_each do |item| 
-          i += 1
-          yield(item, i)
-        end
-      end
-    else return "missing block"
-      
-    end
-  end
-  
-  def my_select
-    if block_given?
-      modified_array = []
-      for i in 0..self.length - 1
-      if yield(self[i]) 
-        modified_array << self[i] 
-      end
-      end
-    end
-      modified_array
-  end
-
-  def my_all?
-    if block_given?
-      true_array = []
-        for i in 0..self.length - 1
-          if yield(self[i])
-          true_array << self[i]
-          end
-        end
-    end
-    return true_array.length === self.length
-  end 
-
-  def my_any
-    if block_given?
-      self.my_each do | item |
-        if yield(item)
-          return true
-        end
-      end
-   end
-    return false
-  end
-
-  def my_none?
-    if block_given?
-      self.my_each do | item |
-        unless yield(item)
-          return true
-        end
-      end
-    end
-      return false
-  end
-
-
-    def my_count
-     unless block_given?
-        return self.length
-     else
-        counter = 0
-        self.my_each do |item|
-          yield(item) ? counter += 1 : item
-        end
-     end
-        return counter 
-    end
-    
     def my_map
       unless block_given?
         return "missing block"
@@ -130,13 +45,27 @@ module Enumerable
               end
             i += 1
           end 
-          p accumulator
+          accumulator
     end
 
-
+    def my_map_takes_proc (&prc)
+      if block_given?
+      modified_array = []
+        for item in self do
+         modified_array << prc.call(item)
+        end
+      else
+        self.to_enum
+      end
+        return modified_array
+    end
 
 # end of module
 end
 
-my_inject_array = [4,4,2]
-injected = my_inject_array.my_inject{|acc, cv| acc * cv}
+
+
+
+
+
+

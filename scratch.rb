@@ -82,7 +82,7 @@ module Enumerable
       return false
   end
 
-  
+
     def my_count
      unless block_given?
         return self.length
@@ -111,79 +111,47 @@ module Enumerable
     # if currval > accumulator, then accumulator = currval
 
     def my_inject(*args)
-      case args.length
-        when 0
-          accumulator = 0
-        when 1
-          accumulator = args[0]
-          self.unshift(accumulator) # self now equals array the method was called on with CV as [0] within that array.
-        else
-          return "Too many arguments, this method takes just one"
-        end
-        
-        i = 0
-        while i < self.length - 1 do 
-          case i
-            when 0
-              accumulator = yield(self[i], self[i + 1])
-            else
-              accumulator = yield(accumulator, self[i + 1])
-            end
-          i += 1
-        end 
-        return accumulator
-  end
+        case args.length
+          when 0
+            accumulator = 0
+          when 1
+            accumulator = args[0]
+            self.unshift(accumulator) # self now equals array the method was called on with CV as [0] within that array.
+          else
+            return "Too many arguments, this method takes just one"
+          end
+          i = 0
+          while i < self.length - 1 do 
+            case i
+              when 0
+                accumulator = yield(self[i], self[i + 1])
+              else
+                accumulator = yield(accumulator, self[i + 1])
+              end
+            i += 1
+          end 
+          p accumulator
+    end
 
-  
+
+
 # end of module
 end
 
+my_inject_array = [4,4,2]
+injected = my_inject_array.my_inject{|acc, cv| acc * cv}
 
 
 
+x = [4, 2, 1, 6, 2]
 
+a = x[0] + x[1]
+b = a + x[2]
+a = b + x[3]
+b = a + x[4]
+p b
 
-# my_reduced_arr = [4,9,16]
-# reduced = my_reduced_arr.reduce{|acc, curr_val| acc * curr_val}
-# p reduced
-
-my_inject_array = [4,25,16]
-injected = my_inject_array.my_inject(0){|acc, cv| acc + cv}
-p injected
-
-my_map_array = [4, 8, 12]
-mapped = my_map_array.my_map{|item| item + 4}
-
-my_count_array = [2, 4, 9, 12, 20]
-cnt = my_count_array.my_count{|item| item > 5}
-
-my_none_array = [1, 2, 3]
-none = my_none_array.my_none?{|item| item.is_a?(String)}
-
-my_any_array = [1, "8", "2"]
-n = my_any_array.my_any {|item| item.is_a?(Integer)}
-
-my_all_array = [1, 8, 2]
-n = my_all_array.my_all? {|item| item.is_a?(Integer)}
-
-my_select_arr = [2, 4, "aa", false]
-j = my_select_arr.my_select {|item| item.is_a?(Integer)}
-
-# my_each_with_index_using_each_arr = [20, 30, 40]
-# my_each_with_index_using_each_arr.my_each_with_index_using_each do |item, ind| 
-#   p "Item = #{item} , Index = #{ind}"
-# end
-
-# my_each_with_index_arr = [20, 30, 40]
-# my_each_with_index_arr.my_each_with_index do |item, ind| 
-#   p "Item = #{item} , Index = #{ind}"
-# end
-
-my_new_each_arr = []
-my_each_arr = [1, 2, 5]
-x  = my_each_arr.my_each do |item|  # x => original array as that is what .each returns.
-   k = item + 5 # on each iteration store modif. value in <k>
-   my_new_each_arr << k # on each iteration append <k> to new array.
-end
-
-
+a = x[0] + x[1] # accumulator = yield(self[i] + self[i + 1])
+a = a + x[3]  # accumulator = yield(accumulator, self[i + 1])
+a = a + x[4]
+p a

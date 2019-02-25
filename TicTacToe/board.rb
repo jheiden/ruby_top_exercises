@@ -34,4 +34,4 @@ class Board
     return @board_array.all? {|char| char == "X" && char == "O"}
   end
 
-end # END OF CLASS
+end 

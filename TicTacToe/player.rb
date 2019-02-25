@@ -6,4 +6,4 @@ class Player
     @player_icon = icon
   end
   
-end # END OF CLASS
+end 

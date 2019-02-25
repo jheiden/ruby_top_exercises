@@ -83,7 +83,8 @@ class GameLogic
    end
   end
 
-end # END OF CLASS
+end
+
 
 mygame = GameLogic.new
 
